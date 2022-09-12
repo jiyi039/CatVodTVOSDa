@@ -146,10 +146,10 @@ public class PlayerFragment  extends BaseLazyFragment {
             }
         });
         mVideoView = findViewById(R.id.mVideoView);
-        mPlayLoadTip = findViewById(R.id.play_load_tip);
-        mPlayLoading = findViewById(R.id.play_loading);
-        mPlayLoadErr = findViewById(R.id.play_load_error);
         mController = new VodController(this.mContext, this);
+        mPlayLoadTip = mController.findViewById(R.id.play_load_tip);
+        mPlayLoading = mController.findViewById(R.id.play_loading);
+        mPlayLoadErr = mController.findViewById(R.id.play_load_error);
         mController.setCanChangePosition(true);
         mController.setEnableInNormal(true);
         mController.setGestureEnabled(true);
@@ -1087,6 +1087,15 @@ public class PlayerFragment  extends BaseLazyFragment {
         mSysWebClient = new PlayerFragment.SysWebClient();
         webView.setWebViewClient(mSysWebClient);
         webView.setBackgroundColor(Color.BLACK);
+    }
+
+    @Override
+    public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode) {
+        if(!isInPictureInPictureMode && mVideoView.isPlaying()) {
+            mController.stopFullScreen();
+            mVideoView.pause();
+        }
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode);
     }
 
     private class SysWebClient extends WebViewClient {
